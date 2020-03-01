@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using TournamentBracketCalculator.Models;
+using TournamentBracketCalculator.Services;
 
 namespace TournamentBracketCalculator
 {
@@ -75,19 +76,15 @@ namespace TournamentBracketCalculator
         {
             if (PlayerRankings != null && PlayersAttending != null)
             {
-
                 var uniquePlayerNames = PlayerRankings.Select(players => players.FullName).ToList();
                 var missingPlayers = PlayersAttending.Except(uniquePlayerNames);
                 if (!missingPlayers.Any())
                 {
                     var playersAttendingTournament = PlayerRankings.Where(x => PlayersAttending.Contains(x.FullName)).ToList();
 
-                    var goldPlayers = playersAttendingTournament.Where(x => x.Category == Category.Gold);
-                    var silverPlayers = playersAttendingTournament.Where(x => x.Category == Category.Silver);
-                    var bronzeAPlayers = playersAttendingTournament.Where(x => x.Category == Category.Bronze_A);
-                    var bronzeBPlayers = playersAttendingTournament.Where(x => x.Category == Category.Bronze_B);
-                }
+                    var test = BracketGenerator.GenerateBrackets(playersAttendingTournament);
 
+                }
             }
         }
     }

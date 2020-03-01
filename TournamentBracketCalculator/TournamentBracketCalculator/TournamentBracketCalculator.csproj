@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Services\BracketGenerator.cs" />
     <Compile Include="Services\ExcelService.cs" />
     <Compile Include="Enums\ExcelType.cs" />
     <Compile Include="ExtensionMethods.cs" />
