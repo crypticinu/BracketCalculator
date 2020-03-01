@@ -11,5 +11,7 @@ namespace TournamentBracketCalculator.Models
         public string FullName { get; set; }
         public int Points { get; set; }
         public Category Category { get; set; }
+
+        public Boolean Paid { get; set; }
     }
 }

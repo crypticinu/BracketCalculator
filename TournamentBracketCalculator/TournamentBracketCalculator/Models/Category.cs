@@ -8,6 +8,7 @@ namespace TournamentBracketCalculator.Models
 {
     public enum Category
     {
+        Unknown,
         Gold,
         Silver,
         Bronze_A,

@@ -1,7 +1,11 @@
 ﻿using BracketCalculator;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using TournamentBracketCalculator.Models;
 
 namespace TournamentBracketCalculator
 {
@@ -10,20 +14,40 @@ namespace TournamentBracketCalculator
         OpenFileDialog ofd = new OpenFileDialog();
 
         private string TournamentAttendancePath = "";
-        private string TournamentRankingPath = "";
+        private string PlayerRankings = "";
 
         private ExcelService ExcelService = new ExcelService();
+
+        List<Player> PlayerList;
+        List<Player> AttendingPlayers;
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void openTournamentRankingListToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openPlayerRankingListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                TournamentRankingPath = ofd.InitialDirectory + ofd.FileName;
+                PlayerRankings = ofd.InitialDirectory + ofd.FileName;
+
+                string ext = Path.GetExtension(ofd.FileName);
+
+                var result = ExcelService.ReadPlayerList(PlayerRankings, ext.ConvertToExcelType());
+
+                if (result != null)
+                    openTournamentAttendanceListToolStripMenuItem.Enabled = true;
+                
+                PlayerList = new List<Player>();
+
+                foreach (var category in result.Values)
+                {
+                    PlayerList.AddRange(category);
+                }
+
+                PlayersPanel.Visible = true;
+
             }
         }
 
@@ -35,9 +59,28 @@ namespace TournamentBracketCalculator
 
                 string ext = Path.GetExtension(ofd.FileName);
 
-                ExcelService.ReadTournamentAttendance(TournamentAttendancePath, ext.ConvertToExcelType());
+               var result = ExcelService.ReadTournamentAttendance(TournamentAttendancePath, ext.ConvertToExcelType());
+
+                AttendingPlayers = result;
+
             }
         }
 
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            Console.WriteLine("Test");
+        }
+
+        private void allPlayersDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
+        private void btn_generate_brackets_Click(object sender, EventArgs e)
+        {
+            if (PlayerList == null || AttendingPlayers == null)
+            {
+
+            }
+        }
     }
 }
