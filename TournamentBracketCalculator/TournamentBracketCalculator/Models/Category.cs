@@ -12,6 +12,6 @@ namespace TournamentBracketCalculator.Models
         Gold,
         Silver,
         Bronze_A,
-        Brone_B
+        Bronze_B
     }
 }

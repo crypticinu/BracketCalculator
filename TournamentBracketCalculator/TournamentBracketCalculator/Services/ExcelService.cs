@@ -11,7 +11,7 @@ namespace BracketCalculator
     {
         private OleDbConnection _connection;
 
-        public List<Player> ReadTournamentAttendance(string path, ExcelType extension)
+        public List<string> ReadTournamentAttendance(string path, ExcelType extension)
         {
             Connect(path, extension);
 
@@ -42,7 +42,7 @@ namespace BracketCalculator
                 }
             }
 
-            return attendingPlayers.Values.ToList();
+            return attendingPlayers.Select(x => x.Value.FullName).ToList() ;
         }
 
         public Dictionary<Category, List<Player>> ReadPlayerList(string path, ExcelType extension)
@@ -97,7 +97,7 @@ namespace BracketCalculator
                                 bronzeAPlayers.Add(player.FullName, player);
                                 break;
                             case "Bronze B":
-                                player.Category = Category.Brone_B;
+                                player.Category = Category.Bronze_B;
                                 player.FullName = cellValue;
                                 player.Points = Convert.ToInt32(row[result.Columns[i + 1]].ToString());
                                 bronzeBPlayers.Add(player.FullName, player);
@@ -112,7 +112,7 @@ namespace BracketCalculator
                 { Category.Gold,  goldPlayers.Values.ToList() },
                 { Category.Silver, silverPlayers.Values.ToList() },
                 { Category.Bronze_A, bronzeAPlayers.Values.ToList() },
-                { Category.Brone_B, bronzeBPlayers.Values.ToList() },
+                { Category.Bronze_B, bronzeBPlayers.Values.ToList() },
             };
 
             return categories;

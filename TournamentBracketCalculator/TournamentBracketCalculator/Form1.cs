@@ -14,12 +14,12 @@ namespace TournamentBracketCalculator
         OpenFileDialog ofd = new OpenFileDialog();
 
         private string TournamentAttendancePath = "";
-        private string PlayerRankings = "";
+        private string PlayerRankingsPath = "";
 
         private ExcelService ExcelService = new ExcelService();
 
-        List<Player> PlayerList;
-        List<Player> AttendingPlayers;
+        List<Player> PlayerRankings;
+        List<string> PlayersAttending;
 
         public Form1()
         {
@@ -30,24 +30,21 @@ namespace TournamentBracketCalculator
         {
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                PlayerRankings = ofd.InitialDirectory + ofd.FileName;
+                PlayerRankingsPath = ofd.InitialDirectory + ofd.FileName;
 
                 string ext = Path.GetExtension(ofd.FileName);
 
-                var result = ExcelService.ReadPlayerList(PlayerRankings, ext.ConvertToExcelType());
+                var result = ExcelService.ReadPlayerList(PlayerRankingsPath, ext.ConvertToExcelType());
 
                 if (result != null)
                     openTournamentAttendanceListToolStripMenuItem.Enabled = true;
-                
-                PlayerList = new List<Player>();
+
+                PlayerRankings = new List<Player>();
 
                 foreach (var category in result.Values)
                 {
-                    PlayerList.AddRange(category);
+                    PlayerRankings.AddRange(category);
                 }
-
-                PlayersPanel.Visible = true;
-
             }
         }
 
@@ -59,10 +56,9 @@ namespace TournamentBracketCalculator
 
                 string ext = Path.GetExtension(ofd.FileName);
 
-               var result = ExcelService.ReadTournamentAttendance(TournamentAttendancePath, ext.ConvertToExcelType());
+                PlayersAttending = ExcelService.ReadTournamentAttendance(TournamentAttendancePath, ext.ConvertToExcelType());
 
-                AttendingPlayers = result;
-
+                PlayersPanel.Visible = true;
             }
         }
 
@@ -77,8 +73,20 @@ namespace TournamentBracketCalculator
 
         private void btn_generate_brackets_Click(object sender, EventArgs e)
         {
-            if (PlayerList == null || AttendingPlayers == null)
+            if (PlayerRankings != null && PlayersAttending != null)
             {
+
+                var uniquePlayerNames = PlayerRankings.Select(players => players.FullName).ToList();
+                var missingPlayers = PlayersAttending.Except(uniquePlayerNames);
+                if (!missingPlayers.Any())
+                {
+                    var playersAttendingTournament = PlayerRankings.Where(x => PlayersAttending.Contains(x.FullName)).ToList();
+
+                    var goldPlayers = playersAttendingTournament.Where(x => x.Category == Category.Gold);
+                    var silverPlayers = playersAttendingTournament.Where(x => x.Category == Category.Silver);
+                    var bronzeAPlayers = playersAttendingTournament.Where(x => x.Category == Category.Bronze_A);
+                    var bronzeBPlayers = playersAttendingTournament.Where(x => x.Category == Category.Bronze_B);
+                }
 
             }
         }
