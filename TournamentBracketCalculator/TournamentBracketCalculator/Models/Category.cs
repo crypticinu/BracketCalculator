@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TournamentBracketCalculator.Models
+{
+    public enum Category
+    {
+        Gold,
+        Silver,
+        Bronze_A,
+        Brone_B
+    }
+}
